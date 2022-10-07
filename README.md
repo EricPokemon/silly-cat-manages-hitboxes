@@ -4,4 +4,4 @@ Hello! this is a Roblox hitbox manager that uses magnitude to detect humanoid ch
 This is a DoD (data oriented design) based module and is very optimized, fast, and accurate. It also scans every humanoid character with a humanoid root part. If you wish to change how it behaves then you must change some stuff in the source code. 
 ## What are the limitaions of this hitbox manager?
 - Hit only hits a humanoid target once.
-- :Stop()
+- There's no :Start or :Stop options for this module, therefore once you create a new hitbox it'll start running and once you destroy said hitbox it's gone.
