@@ -10,12 +10,13 @@ This is a DoD (data oriented design) based module and is very optimized, perform
 [Here](https://www.roblox.com/library/11204552320/silly-cat-manages-hitbox) or through implementing all the modules that was mentioned including this one.
 
 # API
-### *[Dictonary](https://create.roblox.com/docs/education/coding-5/intro-to-dictionaries) HitboxManager:New(hitboxPart:[BasePart]([https://create.roblox.com/docs/education/coding-5/intro-to-dictionaries](https://create.roblox.com/docs/reference/engine/classes/BasePart)), range:[number](https://create.roblox.com/docs/scripting/luau/numbers), duration:[number](https://create.roblox.com/docs/scripting/luau/numbers), character:[Models](https://create.roblox.com/docs/building-and-visuals/studio-modeling/model-objects)))*
+### *[Dictonary](https://create.roblox.com/docs/education/coding-5/intro-to-dictionaries) HitboxManager:New(hitboxPart:[BasePart](https://create.roblox.com/docs/education/coding-5/intro-to-dictionaries](https://create.roblox.com/docs/reference/engine/classes/BasePart)), range:[number](https://create.roblox.com/docs/scripting/luau/numbers), duration:[number](https://create.roblox.com/docs/scripting/luau/numbers), character:[Models](https://create.roblox.com/docs/building-and-visuals/studio-modeling/model-objects)))*
 Creates a new hitbox.
 - hitboxPart: is where the magnitude hitbox will project and scan around
 - range: is the range of the magnitude
 - duration: how long the hitbox last in seconds
 - character: which character is immune to the hitbox. The hitbox won't scan this character. This is ***OPTIONAL***
+Returns the dictonary of the hitbox where you can send it in HitboxManager:Destroy(your hitbox dict here) to prematurely stop the hitbox.
 
-### *[Void](https://create.roblox.com/docs/scripting/luau/nil) HitboxManager:New(hitbox that was created using HitboxManager:New)*
+### *[Void](https://create.roblox.com/docs/scripting/luau/nil) HitboxManager:Destroy(hitbox that was created using HitboxManager:New)*
 Prematurely stops the hitbox and destroying it. Therefore cleaning up signals and gets garbaged collected next frame. Also [voiding](https://create.roblox.com/docs/scripting/luau/nil) itself.
