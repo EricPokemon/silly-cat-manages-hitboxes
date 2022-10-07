@@ -1,4 +1,4 @@
-local visual = false
+local visual = false --change this to true if you want to see the hitbox
 
 local janitor = require(script.Janitor)
 local goodSignal = require(script.GoodSignal)
@@ -64,13 +64,12 @@ function hitboxChecker()
 	end
 end
 
-function HitboxManager:New(part,range:number,duration:number,character)
+function HitboxManager:New(part:BasePart, range:number, duration:number, character:Model)
 	local newHitbox = {
 		part = part,
 		range = range,
 		endTime = os.clock() + duration,
-		char = character,
-		hit = {},
+		hit = {character},
 		Hit = goodSignal.new(),
 		_janitor = janitor.new()
 	}
