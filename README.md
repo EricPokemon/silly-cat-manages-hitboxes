@@ -7,7 +7,7 @@ This is a DoD (data oriented design) based module and is very optimized, perform
 - Hit only hits a humanoid target once.
 - There's no :Start or :Stop options for this module, therefore once you create a new hitbox it'll start running and once you destroy said hitbox it's gone.
 ## Where can I install this module?
-[Through the roblox marketplace](https://www.roblox.com/library/11204552320/silly-cat-manages-hitbox), downloading it, through the [example place]() or through implementing all the modules that was mentioned including this one.
+[Through the roblox marketplace](https://www.roblox.com/library/11204552320/silly-cat-manages-hitbox), downloading it, through the [example place](https://www.roblox.com/games/11205345452/silly-cat-manages-hitboxes-Example-Place) or through implementing all the modules that was mentioned including this one.
 
 # API
 ### *[Dictonary](https://create.roblox.com/docs/education/coding-5/intro-to-dictionaries) HitboxManager:New(hitboxPart:[BasePart](https://create.roblox.com/docs/education/coding-5/intro-to-dictionaries](https://create.roblox.com/docs/reference/engine/classes/BasePart)), range:[number](https://create.roblox.com/docs/scripting/luau/numbers), duration:[number](https://create.roblox.com/docs/scripting/luau/numbers), character:[Models](https://create.roblox.com/docs/building-and-visuals/studio-modeling/model-objects)))*
@@ -21,4 +21,4 @@ Returns the dictonary of the hitbox where you can send it in HitboxManager:Destr
 ### *[Void](https://create.roblox.com/docs/scripting/luau/nil) HitboxManager:Destroy(hitbox that was created using HitboxManager:New)*
 Prematurely stops the hitbox and destroying it. Therefore cleaning up signals and gets garbaged collected next frame. Also [voiding](https://create.roblox.com/docs/scripting/luau/nil) itself.
 
-## Example place: Sword!!!
+## Example place: [Sword!!!](https://www.roblox.com/games/11205345452/silly-cat-manages-hitboxes-Example-Place)
