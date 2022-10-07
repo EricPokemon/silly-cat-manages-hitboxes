@@ -15,7 +15,7 @@ Creates a new hitbox.
 - hitboxPart: is where the magnitude hitbox will project and scan around
 - range: is the range of the magnitude
 - duration: how long the hitbox last in seconds
-- character: which character is immune to the hitbox. The hitbox won't scan this character. This is **OPTIONAL**
+- character: which character is immune to the hitbox. The hitbox won't scan this character. This is ***OPTIONAL***
 
 ### *[Void](https://create.roblox.com/docs/scripting/luau/nil) HitboxManager:New(hitbox that was created using HitboxManager:New)*
 Prematurely stops the hitbox and destroying it. Therefore cleaning up signals and gets garbaged collected next frame. Also [voiding](https://create.roblox.com/docs/scripting/luau/nil) itself.
