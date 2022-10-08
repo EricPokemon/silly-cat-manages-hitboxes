@@ -56,11 +56,10 @@ newHitbox.hit = {
   Character1,
   Character2,
   ect.
-}
+}--These guys in the .hit Table won't take 15 damage if they're in the hitbox!
 newHitbox.Hit:Connect(function(enemyHumanoid) --any humanoid who's in the hitbox radius will take 15 damage.
   enemyHumanoid:TakeDamage(15)
 end)
---These guys in the .hit list won't take 15 damage if they're in the hitbox!
 ```
 
 ### *[number](https://create.roblox.com/docs/scripting/luau/numbers) range*
