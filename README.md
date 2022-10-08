@@ -24,3 +24,4 @@ Returns the dictonary of the hitbox where you can send it in HitboxManager:Destr
 Prematurely stops the hitbox and destroying it. Therefore cleaning up signals and gets garbaged collected next frame. Also [voiding](https://create.roblox.com/docs/scripting/luau/nil) itself.
 
 ## Example place: [Sword!!!](https://www.roblox.com/games/11205345452/silly-cat-manages-hitboxes-Example-Place)
+### [Donations is much appericated](https://www.roblox.com/catalog/10528629289/Donate-to-the-developers)
