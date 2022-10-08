@@ -12,16 +12,26 @@ This is a DoD (data oriented design) based module and is very optimized, perform
 [Through the roblox marketplace](https://www.roblox.com/library/11204552320/silly-cat-manages-hitbox), [downloading it](https://github.com/EricPokemon/silly-cat-manages-hitboxes/blob/main/silly%20cat%20manages%20hitboxes.rbxm), through the [example place](https://www.roblox.com/games/11205345452/silly-cat-manages-hitboxes-Example-Place) or through implementing all the modules that was mentioned including this one.
 
 # API
+## Functions
 ### *[Dictonary](https://create.roblox.com/docs/education/coding-5/intro-to-dictionaries) HitboxManager:New(hitboxPart:[BasePart](https://create.roblox.com/docs/education/coding-5/intro-to-dictionaries](https://create.roblox.com/docs/reference/engine/classes/BasePart)), range:[number](https://create.roblox.com/docs/scripting/luau/numbers), duration:[number](https://create.roblox.com/docs/scripting/luau/numbers), character:[Models](https://create.roblox.com/docs/building-and-visuals/studio-modeling/model-objects)))*
 Creates a new hitbox.
 - hitboxPart: is where the magnitude hitbox will project and scan around
 - range: is the range of the magnitude
 - duration: how long the hitbox last in seconds
 - character: which character is immune to the hitbox. The hitbox won't scan this character. This is ***OPTIONAL***
-Returns the dictonary of the hitbox where you can send it in HitboxManager:Destroy(your hitbox dict here) to prematurely stop the hitbox.
+Returns the dictonary of the hitbox where you can send it in HitboxManager:Destroy(Hitbox dictonary) to prematurely stop the hitbox.
 
-### *[Void](https://create.roblox.com/docs/scripting/luau/nil) HitboxManager:Destroy(hitbox that was created using HitboxManager:New)*
+### *[Void](https://create.roblox.com/docs/scripting/luau/nil) HitboxManager:Destroy(Hitbox dictonary)*
 Prematurely stops the hitbox and destroying it. Therefore cleaning up signals and gets garbaged collected next frame. Also [voiding](https://create.roblox.com/docs/scripting/luau/nil) itself.
+
+
+## Events
+### *[RBXScriptSignal](https://create.roblox.com/docs/reference/engine/datatypes/RBXScriptSignal) .Hit([Humanoid])(https://create.roblox.com/docs/reference/engine/classes/Humanoid)*
+Fire when a humanoid character is in range of the hitbox. This will return the humanoid of the humanoid Character.
+
+## Properties
+### *[Table](https://create.roblox.com/docs/scripting/luau/tables) hit*
+Humanoid characters that were already hit by the hitbox, therefore immune to the hitbox. You can add multiple humanoid characters into this hitbox to make them immune from the hitbox. Great for removing friendly fire in games.
 
 ## Example place: [Sword!!!](https://www.roblox.com/games/11205345452/silly-cat-manages-hitboxes-Example-Place)
 #### [Donations is much appericated](https://www.roblox.com/catalog/10528629289/Donate-to-the-developers)
