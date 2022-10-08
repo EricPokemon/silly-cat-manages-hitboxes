@@ -5,7 +5,7 @@
 Hello! this is a Roblox hitbox manager that uses magnitude to detect humanoid characters. I recently just made this as in October 7 2022, so there may be some bugs but please bear with me. This module uses [Janitor](https://github.com/howmanysmall/Janitor) and stravant's [Good Signal](https://devforum.roblox.com/t/lua-signal-class-comparison-optimal-goodsignal-class/1387063). The reason I made this module is because I couldn't find any magnitude hitbox modules, so here it is!
 
 #### A basic sword tool using this module
-![example gif](https://github.com/EricPokemon/silly-cat-manages-hitboxes/blob/main/silly%20cat%20hitbox.mp4)
+![example gif](https://gyazo.com/66798be6a8712321e0e1f8a9af3fee09)
 
 
 ## What features does it include?
