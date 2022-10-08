@@ -1,4 +1,4 @@
-local visual = false --change this to true if you want to see the hitbox
+local visual = true
 
 local janitor = require(script.Janitor)
 local goodSignal = require(script.GoodSignal)
@@ -9,6 +9,11 @@ local HitboxManager = {
 	managing = {},
 	characters = {}
 }
+for i,v in pairs(workspace:GetDescendants()) do
+	if v.ClassName == "Humanoid" then
+		table.insert(HitboxManager.characters,v.Parent)
+	end
+end
 workspace.DescendantAdded:Connect(function(new)
 	if new.ClassName == "Humanoid" then
 		table.insert(HitboxManager.characters,new.Parent)
