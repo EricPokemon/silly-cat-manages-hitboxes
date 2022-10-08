@@ -46,16 +46,16 @@ end)
 ### *[Table](https://create.roblox.com/docs/scripting/luau/tables) hit*
 Humanoid characters that were already hit by the hitbox, therefore immune to the hitbox. You can add multiple humanoid characters into this hitbox to make them immune from the hitbox. Great for removing friendly fire in games.
 ```lua
-local newHitbox = hitboxManager:New(Handle,3,1) --creates a new magnitude hitbox that will scan around Handle with a range of 3 and will last 1 second. Variable Character will be ignored.
-newHitbox.Hit:Connect(function(enemyHumanoid) --any humanoid who's in the hitbox radius will take 15 damage.
-  enemyHumanoid:TakeDamage(15)
-end)
+local newHitbox = hitboxManager:New(Handle,3,1) --creates a new magnitude hitbox that will scan around Handle with a range of 3 and will last 1 second. There's no character's who's immune yet.
 newHitbox.hit = {
   Character,
   Character1,
   Character2,
   ect.
 }
+newHitbox.Hit:Connect(function(enemyHumanoid) --any humanoid who's in the hitbox radius will take 15 damage.
+  enemyHumanoid:TakeDamage(15)
+end)
 --These guys in the .hit list won't take 15 damage if they're in the hitbox!
 ```
 
