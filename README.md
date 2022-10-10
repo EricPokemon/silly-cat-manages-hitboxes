@@ -25,6 +25,13 @@ This is a DoD (data oriented design) based module and is very optimized, perform
 ### *[Void](https://create.roblox.com/docs/scripting/luau/nil) HitboxManager:AddCharacter(character)*
 Adds a character to the hitbox manager. Will automatically clean up itself when the character is dead or is :Destroy().
 
+```lua
+local NPCS = workspace.NPCS --path to your npcs 
+for _,NPC in pairs(workspace.NPCS:GetChildren()) do -- this is how you add npcs who are in a folder.
+	hitboxManager:AddCharacter(NPC) --Now the NPC is added it'll now be affected by the hitbox!
+end
+```
+  
 ### *[Dictonary](https://create.roblox.com/docs/education/coding-5/intro-to-dictionaries) HitboxManager:New(hitboxPart:[BasePart](https://create.roblox.com/docs/education/coding-5/intro-to-dictionaries](https://create.roblox.com/docs/reference/engine/classes/BasePart)), range:[number](https://create.roblox.com/docs/scripting/luau/numbers), duration:[number](https://create.roblox.com/docs/scripting/luau/numbers), character:[Models](https://create.roblox.com/docs/building-and-visuals/studio-modeling/model-objects)))*
 Creates a new hitbox.
 - hitboxPart: is where the magnitude hitbox will project and scan around
