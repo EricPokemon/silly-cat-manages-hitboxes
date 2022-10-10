@@ -28,7 +28,7 @@ Adds a character to the hitbox manager. Will automatically clean up itself when 
 ```lua
 local NPCS = workspace.NPCS --path to your npcs 
 for _,NPC in pairs(workspace.NPCS:GetChildren()) do -- this is how you add npcs who are in a folder.
-	hitboxManager:AddCharacter(NPC) --Now the NPC is added it'll now be affected by the hitbox!
+	hitboxManager:AddCharacter(NPC) --Now the NPC is added it'll now be affected by the hitboxes!
 end
 ```
   
