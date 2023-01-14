@@ -1,150 +1,230 @@
-local visual:boolean = true -- change this to false if you don't want to see the visual.
-
-local janitor = require(script.Janitor)
-local goodSignal = require(script.GoodSignal)
-
-local players = game:GetService("Players")
-local heartbeat = game:GetService("RunService").Heartbeat
-
-local _janitor = janitor.new()
-local checkConnection
-
-local HitboxManager = {
-	managing = {},
-	characters = {}
-}
-
-function HitboxManager:AddCharacter(character:Model)
-	task.spawn(function()
-		if not character:FindFirstChildOfClass("Humanoid") and not character:FindFirstChild("HumanoidRootPart") then
-			warn("Character doesn't have a Humanoid and or doesn't have a HumanoidRootPart. Won't add the character")
-		elseif table.find(HitboxManager.characters,character) then
-			warn("Character is already in the table! Won't re-add the character.")
-		else
-			table.insert(self.characters,character)
-		end
-	end)
-end
-
-
-for _, player in pairs(players:GetPlayers()) do -- players whom loaded before keep this
-	HitboxManager:AddCharacter(player.Character)
-end
-
 --[[
-IMPORTANT
-
-remove this connection if you have you have another connection similar to this 
-and add the function HitboxManager:AddCharacter(character) in.
-
-To add npcs to the hitbox manager you'll need to put in a :AddCharacter(NPC) so it'll get affected 
-by the hitboxes.
-
-local NPCS = path to NPCS folder 
-for _,NPC in pairs(workspace.NPCS:GetChildren()) do -- this is how you add npcs who are in a folder.
-	hitboxManager:AddCharacter(NPC)
-end
+    Silly Cats Manages Hitboxes v2
+    An open source magnitude hitbox module created by Eric_pokemon.
+    Last edited: 01/11/22
+    
+    More information and documentation can be found here: 
+    https://devforum.roblox.com/t/2013747
+    
+    Feel free to leave feedback and criticism on the post. 
+    You're free to fork this too.
+    
+    PS: THIS IS NOT BACKWARDS COMPATIBLE. VARIABLES AND PROPERTIES LOCATION AND NAME HAS BEEN CHANGED FOR THE SAKE OF READABILITY.
+    v1.0 and v1.1 scripts will not work. Future versions will be compatible with v2.
 ]]
-players.PlayerAdded:Connect(function(player)
-	player.CharacterAppearanceLoaded:Connect(function(character)
-		HitboxManager:AddCharacter(character)
-	end)
-end)
---
 
-local function visualize(hitbox)
-	if visual then
-		local newVisual = Instance.new("Part")
-		newVisual.Parent = workspace
-		newVisual.CFrame = hitbox.part.CFrame
-		newVisual.Size = Vector3.new(hitbox.range*2,hitbox.range*2,hitbox.range*2)
-		newVisual.CanCollide = false
-		newVisual.Massless = true
-		newVisual.BrickColor = BrickColor.new("Bright red")
-		newVisual.Transparency = .7
-		newVisual.Shape = Enum.PartType.Ball
-		
-		local weld = Instance.new("Weld")
-		weld.Parent = newVisual
-		weld.Part0 = newVisual
-		weld.Part1 = hitbox.part
-		
-		hitbox.Visual = newVisual
+-- Modules
+local Janitor = require(script.Janitor)
+local GoodSignal = require(script.GoodSignal)
+
+-- Services
+local Players = game:GetService("Players")
+local Heartbeat = game:GetService("RunService").Heartbeat
+
+-- Settings
+local AutoAddPlayers: boolean? = true
+local VisualHitboxes: boolean? = true
+
+-- Variables
+local CleanUpLoop = Janitor.new()
+local CheckConnection: RBXScriptConnection?
+local Managing = {} -- {active hitboxes}
+local Characters = {} -- {Characters}
+
+-- Module Variables
+local HitboxManager = {} -- {Module functions}
+
+-- Auxiliary
+local function VisualizeHitbox(Hitbox:hitbox)
+    --[[
+        Description: This function will visualize the hitboxes if setting VisualHitboxes is true.
+        Arguments: Hitbox (custom dictionary type.)
+        Returns: Void
+    ]]
+	
+	if VisualHitboxes then
+		local NewVisual = Instance.new("Part")
+		NewVisual.Parent = workspace
+		NewVisual.CFrame = Hitbox.Part.CFrame
+		NewVisual.Size = Vector3.new(Hitbox.Range*2,Hitbox.Range*2,Hitbox.Range*2)
+		NewVisual.CanCollide = false
+		NewVisual.Massless = true
+		NewVisual.BrickColor = BrickColor.new("Bright red")
+		NewVisual.Transparency = .7
+		NewVisual.Shape = Enum.PartType.Ball
+
+		local weld = Instance.new("WeldConstraint")
+		weld.Parent = NewVisual
+		weld.Part0 = NewVisual
+		weld.Part1 = Hitbox.Part
+
+		Hitbox.Visual = NewVisual
 	end
 end
 
-local function checkHumanoid(hitbox)
-	task.spawn(function()
-		for _,character in ipairs(HitboxManager.characters) do
-			if (hitbox.part.Position - character.HumanoidRootPart.Position).Magnitude <= hitbox.range then
-				if not table.find(hitbox.hit,character) then
-					table.insert(hitbox.hit,character)
-					hitbox.Hit:Fire(character.Humanoid)
-				end
-			end
-			
-			--checks if the character is gone or dead.
-			if not character or not character.Parent or character.Humanoid:GetState() == Enum.HumanoidStateType.Dead then
-				table.remove(HitboxManager.characters,table.find(HitboxManager.characters,character))
-			end
+local function isCharacterDead(Character:Model)
+	return not Character
+		or not Character.Parent
+		or Character.Humanoid:GetState() == Enum.HumanoidStateType.Dead
+		or not Character.Humanoid 
+		or Character.Humanoid.Health <= 0
+end
+
+local function CheckHumanoids(Hitbox:hitbox)
+    --[[
+        Description: Check if any characters are in the hitbox. They will not be hit again unless the table hitbox.hit got rid of 
+        the character. Some more information could be found in the 'HitboxChecker' function.
+        Arguments: Hitbox (custom dictionary type.)
+        Returns: Void
+    ]]
+
+	for _,Character in ipairs(Characters) do
+		-- will ignore this character if the character has already been hit, not in range or is dead 
+		if isCharacterDead(Character) or (Hitbox.Part.Position - Character.HumanoidRootPart.Position).Magnitude > Hitbox.Range or table.find(Hitbox.IsImmune, Character) then
+			continue
 		end
+
+		table.insert(Hitbox.IsImmune,Character)
+		Hitbox.Hit:Fire(Character.Humanoid)
+	end
+end
+
+local function HitboxChecker()
+    --[[
+        Description: Runs pre-heartbeat. Checks if characters are in a hitbox.
+        Will fire the .Hit signal when there's a character in a hitbox. 
+        Arguments: Void
+        Returns: Void
+    ]]
+
+	if #Managing == 0 then
+		CheckConnection:Disconnect()
+		CheckConnection = nil
+		return
+	end
+
+	for _,Hitbox in ipairs(Managing) do
+		if os.clock() >= Hitbox.EndTime or not Hitbox.Part then 
+			HitboxManager.Destroy(Hitbox)
+			continue
+		end
+		CheckHumanoids(Hitbox)
+	end
+end
+
+-- Module functions
+function HitboxManager.AddCharacter(Character:Model)
+    --[[
+        Description: Allows a character with a humanoid to be affected by any active hitbox.
+        Arguments: Character (Model containing both a humanoid and a humanoidRootPart.)
+        Returns: Void
+    ]]
+	
+	if table.find(Characters,Character) then warn("Character has already been added. Won't be readding.") return end
+
+	local Humanoid = Character:FindFirstChild("Humanoid") or warn("Character won't be detected to hitboxes because 'Humanoid' doesn't exist.")
+	local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart") or warn("Character won't be detected to hitboxes because 'HumanoidRootPart' doesn't exist.") 
+	
+	table.insert(Characters,Character)
+
+	-- Signals
+	local DieSignal
+	local DestroyingSignal
+
+	DieSignal = Humanoid.Died:Once(function()
+		DieSignal:Disconnect()
+		DieSignal = nil
+		DestroyingSignal:Disconnect()
+		DestroyingSignal = nil
+		
+		table.remove(Characters,table.find(Characters,Character))
+		print(Characters)
+	end)
+	
+	DestroyingSignal = Character.Destroying:Once(function()
+		DieSignal:Disconnect()
+		DieSignal = nil
+		DestroyingSignal:Disconnect()
+		DestroyingSignal = nil
+		
+		table.remove(Characters,table.find(Characters,Character))
+		print(Characters)
 	end)
 end
 
-local function hitboxChecker()
-	if #HitboxManager.managing == 0 then
-		checkConnection:Disconnect()
-		checkConnection = nil
+function HitboxManager.new(Part:BasePart, Range:Number, Duration:Number, Immune:{any}|Model|nil)
+    --[[
+        Description: Creates a new hitbox. This will return a new active hitbox.
+        Arguments: Hitbox (custom dictonary type.)
+        Returns: Dictonary (The custom hitbox type)
+    ]]
+	
+	if type(Immune) ~= "table" then
+		Immune = {Immune}
 	end
-	for _,hitbox in pairs(HitboxManager.managing) do
-		if os.clock() >= hitbox.endTime then 
-			HitboxManager:Destroy(hitbox)
-		else
-			checkHumanoid(hitbox)
-		end
-	end
-end
-
-function HitboxManager:New(part:BasePart, range:number, duration:number, character:Model)
-	local newHitbox = {
-		part = part,
-		range = range,
-		endTime = os.clock() + duration,
-		hit = {character},
-		Hit = goodSignal.new(),
-		_janitor = janitor.new()
+	
+	local NewHitbox = {
+		Part = Part,
+		Range = Range,
+		EndTime = os.clock() + Duration,
+		IsImmune = Immune,
+		Hit = GoodSignal.new(),
+		_Janitor = Janitor.new()
 	}
-	table.insert(self.managing,newHitbox)
-	newHitbox._janitor:Add(newHitbox.Hit,"DisconnectAll")
-	newHitbox._janitor:LinkToInstance(part)
 	
-	if not checkConnection then
-		checkConnection = _janitor:Add(heartbeat:Connect(hitboxChecker),"Disconnect")
+	table.insert(Managing,NewHitbox)
+	NewHitbox._Janitor:Add(NewHitbox.Hit,"DisconnectAll")
+	NewHitbox._Janitor:LinkToInstance(Part)
+
+	if not CheckConnection then
+		CheckConnection = CleanUpLoop:Add(Heartbeat:Connect(HitboxChecker),"Disconnect")
 	end
 	
-	visualize(newHitbox)
+	VisualizeHitbox(NewHitbox)
 	
-	return newHitbox
+	return NewHitbox
 end
 
-function HitboxManager:Destroy(hitbox)
-	local findHitbox = table.find(self.managing,hitbox)
-	if findHitbox then
-		hitbox.Hit:DisconnectAll()
+function HitboxManager.Destroy(Hitbox:hitbox)
+    --[[
+        Description: This function will destroy the hitbox. Voiding the hitbox and its properties.
+        This can be called to prematurely stop an active hitbox.
+        Arguments: Hitbox (custom dictionary type.)
+        Returns: Void
+    ]]
+	
+	local FindHitbox = table.find(Managing,Hitbox)
+	
+	if FindHitbox then
+		Hitbox.Hit:DisconnectAll()
 
-		if visual then
-			hitbox.Visual:Destroy()
+		if VisualHitboxes then
+			Hitbox.Visual:Destroy()
 		end
 
-		local hasJanitor = self._janitor
+		local hasJanitor = Hitbox._Janitor
 		if hasJanitor then
 			hasJanitor:Destroy()
 		end
 
-		table.remove(self.managing,findHitbox)
+		table.remove(Managing,FindHitbox)
+		Hitbox = nil
+		FindHitbox = nil
+	end
+end
+
+-- Runs settings
+
+if AutoAddPlayers then
+	for _, Player in ipairs(Players:GetPlayers()) do -- players whom loaded before keep this
+		HitboxManager:AddCharacter(Player.Character)
 	end
 
-	print(HitboxManager.characters)
+	Players.PlayerAdded:Connect(function(Player)
+		Player.CharacterAppearanceLoaded:Connect(function(Character)
+			HitboxManager.AddCharacter(Character)
+		end)
+	end)
 end
 
 return HitboxManager
