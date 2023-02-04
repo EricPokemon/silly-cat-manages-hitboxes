@@ -41,6 +41,8 @@ Creates a new hitbox.
 - Returns the dictonary of the hitbox where you can send it in HitboxManager.Destroy(Hitbox dictonary) to prematurely stop the hitbox.
 ```lua
 local newHitbox = hitboxManager.new(Handle,3,1,Character) --creates a new magnitude hitbox that will scan around Handle with a range of 3 and will last 1 second. Variable Character will be ignored.
+-- OR
+local newHitbox = hitboxManager.new(Handle,3,1,{Character1, Character2, Character3}) -- Put multiple character that's immune by inserting them in a table.
 ```
 
 ### *[Void](https://create.roblox.com/docs/scripting/luau/nil) HitboxManager.Destroy(Hitbox dictonary)*
