@@ -5,7 +5,7 @@
 [![image](https://github.com/EricPokemon/silly-cat-manages-hitboxes/blob/main/7f27964d7018b45a0ebbb012216e81cd.png?raw=true)
 also no I didn't draw this I just think it's silly
 
-
+## [Dev forum](https://devforum.roblox.com/t/introducing-silly-cats-manages-hitboxes-v20-create-magnitude-hitbox-with-ease/2013747)
 #### [Source Code](https://github.com/EricPokemon/silly-cat-manages-hitboxes/blob/main/HitboxManager.lua)
 #### [Example Place](https://www.roblox.com/games/11205345452/silly-cat-manages-hitboxes-Example-Place)
 #### [Download](https://github.com/EricPokemon/silly-cat-manages-hitboxes/releases/tag/latest)
