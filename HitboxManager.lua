@@ -1,7 +1,7 @@
 --[[
-    Silly Cats Manages Hitboxes v2
+    Silly Cats Manages Hitboxes v2.1
     An open source magnitude hitbox module created by Eric_pokemon.
-    Last edited: 01/11/22
+    Last edited: 04/15/23
     
     More information and documentation can be found here: 
     https://devforum.roblox.com/t/2013747
@@ -12,6 +12,18 @@
     PS: THIS IS NOT BACKWARDS COMPATIBLE. VARIABLES AND PROPERTIES LOCATION AND NAME HAS BEEN CHANGED FOR THE SAKE OF READABILITY.
     v1.0 and v1.1 scripts will not work. Future versions will be compatible with v2.
 ]]
+
+
+export type SillyHitbox = {
+	Part: BasePart,
+	Range: number,
+	EndTime: number,
+	IsImmune: {Model?},
+	Hit: RBXScriptSignal,
+	_Janitor: never,
+
+	Visual: Part?
+}
 
 -- Modules
 local Janitor = require(script.Janitor)
@@ -35,13 +47,13 @@ local Characters = {} -- {Characters}
 local HitboxManager = {} -- {Module functions}
 
 -- Auxiliary
-local function VisualizeHitbox(Hitbox:hitbox)
+local function VisualizeHitbox(Hitbox: SillyHitbox)
     --[[
         Description: This function will visualize the hitboxes if setting VisualHitboxes is true.
         Arguments: Hitbox (custom dictionary type.)
         Returns: Void
     ]]
-	
+
 	if VisualHitboxes then
 		local NewVisual = Instance.new("Part")
 		NewVisual.Parent = workspace
@@ -62,7 +74,9 @@ local function VisualizeHitbox(Hitbox:hitbox)
 	end
 end
 
-local function isCharacterDead(Character:Model)
+
+
+local function isCharacterDead(Character: Model)
 	return not Character
 		or not Character.Parent
 		or Character.Humanoid:GetState() == Enum.HumanoidStateType.Dead
@@ -70,7 +84,9 @@ local function isCharacterDead(Character:Model)
 		or Character.Humanoid.Health <= 0
 end
 
-local function CheckHumanoids(Hitbox:hitbox)
+
+
+local function CheckHumanoids(Hitbox: SillyHitbox)
     --[[
         Description: Check if any characters are in the hitbox. They will not be hit again unless the table hitbox.hit got rid of 
         the character. Some more information could be found in the 'HitboxChecker' function.
@@ -88,6 +104,8 @@ local function CheckHumanoids(Hitbox:hitbox)
 		Hitbox.Hit:Fire(Character.Humanoid)
 	end
 end
+
+
 
 local function HitboxChecker()
     --[[
@@ -112,19 +130,21 @@ local function HitboxChecker()
 	end
 end
 
+
+
 -- Module functions
-function HitboxManager.AddCharacter(Character:Model)
+function HitboxManager.AddCharacter(Character: Model): ()
     --[[
         Description: Allows a character with a humanoid to be affected by any active hitbox.
         Arguments: Character (Model containing both a humanoid and a humanoidRootPart.)
         Returns: Void
     ]]
-	
+
 	if table.find(Characters,Character) then warn("Character has already been added. Won't be readding.") return end
 
 	local Humanoid = Character:FindFirstChild("Humanoid") or warn("Character won't be detected to hitboxes because 'Humanoid' doesn't exist.")
 	local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart") or warn("Character won't be detected to hitboxes because 'HumanoidRootPart' doesn't exist.") 
-	
+
 	table.insert(Characters,Character)
 
 	-- Signals
@@ -136,34 +156,34 @@ function HitboxManager.AddCharacter(Character:Model)
 		DieSignal = nil
 		DestroyingSignal:Disconnect()
 		DestroyingSignal = nil
-		
+
 		table.remove(Characters,table.find(Characters,Character))
-		print(Characters)
 	end)
-	
+
 	DestroyingSignal = Character.Destroying:Once(function()
 		DieSignal:Disconnect()
 		DieSignal = nil
 		DestroyingSignal:Disconnect()
 		DestroyingSignal = nil
-		
+
 		table.remove(Characters,table.find(Characters,Character))
-		print(Characters)
 	end)
 end
 
-function HitboxManager.new(Part:BasePart, Range:Number, Duration:Number, Immune:{any}|Model|nil)
+
+
+function HitboxManager.new(Part: BasePart, Range: number, Duration: number, Immune: ({any}|Model)?): SillyHitbox
     --[[
         Description: Creates a new hitbox. This will return a new active hitbox.
         Arguments: Hitbox (custom dictonary type.)
         Returns: Dictonary (The custom hitbox type)
     ]]
-	
+
 	if type(Immune) ~= "table" then
 		Immune = {Immune}
 	end
-	
-	local NewHitbox = {
+
+	local NewHitbox: SillyHitbox = {
 		Part = Part,
 		Range = Range,
 		EndTime = os.clock() + Duration,
@@ -171,7 +191,7 @@ function HitboxManager.new(Part:BasePart, Range:Number, Duration:Number, Immune:
 		Hit = GoodSignal.new(),
 		_Janitor = Janitor.new()
 	}
-	
+
 	table.insert(Managing,NewHitbox)
 	NewHitbox._Janitor:Add(NewHitbox.Hit,"DisconnectAll")
 	NewHitbox._Janitor:LinkToInstance(Part)
@@ -179,22 +199,24 @@ function HitboxManager.new(Part:BasePart, Range:Number, Duration:Number, Immune:
 	if not CheckConnection then
 		CheckConnection = CleanUpLoop:Add(Heartbeat:Connect(HitboxChecker),"Disconnect")
 	end
-	
+
 	VisualizeHitbox(NewHitbox)
-	
+
 	return NewHitbox
 end
 
-function HitboxManager.Destroy(Hitbox:hitbox)
+
+
+function HitboxManager.Destroy(Hitbox: SillyHitbox): ()
     --[[
         Description: This function will destroy the hitbox. Voiding the hitbox and its properties.
         This can be called to prematurely stop an active hitbox.
         Arguments: Hitbox (custom dictionary type.)
         Returns: Void
     ]]
-	
+
 	local FindHitbox = table.find(Managing,Hitbox)
-	
+
 	if FindHitbox then
 		Hitbox.Hit:DisconnectAll()
 
@@ -208,19 +230,21 @@ function HitboxManager.Destroy(Hitbox:hitbox)
 		end
 
 		table.remove(Managing,FindHitbox)
+
 		Hitbox = nil
 		FindHitbox = nil
 	end
 end
 
--- Runs settings
 
+
+-- Runs settings
 if AutoAddPlayers then
 	for _, Player in ipairs(Players:GetPlayers()) do -- players whom loaded before keep this
-		HitboxManager:AddCharacter(Player.Character)
+		HitboxManager.AddCharacter(Player.Character)
 	end
 
-	Players.PlayerAdded:Connect(function(Player)
+	AutoAddPlayers = Players.PlayerAdded:Connect(function(Player)
 		Player.CharacterAppearanceLoaded:Connect(function(Character)
 			HitboxManager.AddCharacter(Character)
 		end)
