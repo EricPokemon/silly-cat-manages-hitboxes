@@ -2,7 +2,7 @@
 
 # **Silly Cat Manages Hitboxes**
 
-[![image](https://github.com/EricPokemon/silly-cat-manages-hitboxes/blob/main/7f27964d7018b45a0ebbb012216e81cd.png?raw=true)
+![image](https://github.com/EricPokemon/silly-cat-manages-hitboxes/blob/main/7f27964d7018b45a0ebbb012216e81cd.png?raw=true)
 also no I didn't draw this I just think it's silly
 
 ## [Dev forum](https://devforum.roblox.com/t/introducing-silly-cats-manages-hitboxes-v20-create-magnitude-hitbox-with-ease/2013747)
@@ -17,7 +17,7 @@ also no I didn't draw this I just think it's silly
 Hello! I’ve created a roblox hitbox manager that uses magnitude to detect humanoid characters. This was created October 7 2022, Last updated 1/14/2023. This module uses module uses [Janitor](https://github.com/howmanysmall/Janitor) and Stravant's [Good Signal](https://devforum.roblox.com/t/lua-signal-class-comparison-optimal-goodsignal-class/1387063). The reason I made this module is because I couldn’t find any magnitude hitbox modules and I really wanted to use a magnitude hitbox system, so I decided to make one myself. My intention of this module is to be mainly used in fighting games and to be easy to modify and add onto to suit your needs.
 
 #### A basic sword tool using this module
-![example gif](https://github.com/EricPokemon/silly-cat-manages-hitboxes/blob/main/silly%20cat%20hitbox.mp4?raw=true)
+[example gif](https://github.com/EricPokemon/silly-cat-manages-hitboxes/blob/main/silly%20cat%20hitbox.mp4?raw=true)
 
 ## **What features does this include?**
 This is what I would like to think is pretty minimal. This module is accurate and is easy to use and understand. It contains a ‘Characters’ table which you could add humanoid characters that you want the hitbox to check if they’re in range, a way to visualize the hitbox, and a way to make the hitbox not scan certain characters. You can toggle the hitbox visuals by editing the module. As well toggle if players are automatically added or not.
